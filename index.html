@@ -36,6 +36,10 @@ body{
     position:absolute;
     width:100%;
     height:100%;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
     background:#ffffff;
     border-radius:20px;
     padding:30px;
@@ -52,6 +56,35 @@ body{
     transform:translateY(0) scale(1);
     pointer-events:auto;
 }
+
+/* Make the white card content fluid and readable on all screens */
+.page{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: clamp(18px, 3.5vw, 34px);
+    border-radius: clamp(12px,2.5vw,20px);
+}
+
+.page .content-inner{
+    width:100%;
+    max-width:820px;
+    box-sizing:border-box;
+    padding:0;
+}
+
+h1{ font-size: clamp(1.25rem, 4.5vw, 2.2rem); }
+h2{ font-size: clamp(1rem, 3.5vw, 1.6rem); color:#ff4081; margin-top:6px; }
+h3{ font-size: clamp(.95rem, 3vw, 1.15rem); }
+
+p, .quote p{ font-size: clamp(15px, 3.5vw, 20px); line-height:1.6; color: #444; word-break:break-word; }
+
+.quote{ max-width:92%; margin:12px auto; text-align:center; }
+
+img{ max-width:100%; height:auto; display:block; margin:12px auto; border-radius:12px; }
+
+button{ min-width:120px; }
 
 h1{
     color:#ff4081;
@@ -196,6 +229,61 @@ button:hover{ background:#e91e63; transform:translateY(-3px); box-shadow:0 8px 2
 @keyframes beat{
     50%{transform:scale(1.2);}
 }
+
+/* Responsive adjustments */
+@media (max-width: 900px){
+    .book{ max-width:720px; }
+    img{ width: clamp(160px, 40vw, 320px); }
+    h1{ font-size:1.6rem; }
+    .quote{ font-size:18px; }
+    .heart{ font-size:56px; }
+}
+
+@media (max-width: 600px){
+    body{ overflow:auto; }
+    #bg-canvas, #balloons, .confetti{ display:none !important; }
+    .book{ width:94%; max-width:420px; height:100vh; margin:8px auto; }
+    .page{ padding:18px; border-radius:14px; min-height:100%; }
+    .page, .book{ min-height:0; }
+    .cover{ height:auto; padding:12px 0; }
+    img{ width: clamp(120px, 48vw, 320px); height:auto; display:block; margin:10px auto; }
+    h1{ font-size:1.4rem; }
+    .quote{ font-size:16px; line-height:1.6; }
+    .heart{ font-size:48px; }
+    button{ width:86%; display:block; margin:10px auto; padding:14px; font-size:18px; }
+}
+
+@media (max-width: 380px){
+    body{ padding:6px; overflow:auto; }
+    #bg-canvas, #balloons, .confetti{ display:none !important; }
+    .book{ width:98%; max-width:360px; }
+    h1{ font-size:1.15rem; }
+    .quote{ font-size:15px; }
+    .balloon{ display:none; }
+    button{ width:92%; }
+}
+
+/* Mobile control bar (Prev / Play / Next) */
+#mobile-controls{ display:none; }
+@media (max-width: 600px){
+    #mobile-controls{
+        display:flex;
+        gap:10px;
+        align-items:center;
+        justify-content:space-between;
+        position:fixed;
+        left:8px;
+        right:8px;
+        bottom:calc(env(safe-area-inset-bottom, 12px) + 8px);
+        z-index:4;
+        padding:8px;
+        background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+        border-radius:12px;
+        box-shadow:0 6px 20px rgba(0,0,0,0.12);
+        pointer-events:auto;
+    }
+    #mobile-controls button{ flex:1; margin:0; padding:12px; font-size:16px; border-radius:10px; }
+}
 </style>
 </head>
 <body>
@@ -308,6 +396,13 @@ button:hover{ background:#e91e63; transform:translateY(-3px); box-shadow:0 8px 2
 
 </div>
 
+<!-- Mobile controls for easier navigation and playback -->
+<div id="mobile-controls" aria-hidden="false">
+    <button id="mobile-prev" aria-label="Previous" onclick="prevPage()">⬅ Back</button>
+    <button id="mobile-play" aria-label="Play/Pause" onclick="document.getElementById('music-btn').click()">🎵 Play</button>
+    <button id="mobile-next" aria-label="Next" onclick="nextPage()">Next ➡</button>
+</div>
+
 <script>
 let currentPage = 1;
 
@@ -395,6 +490,7 @@ function setupMusicButton(){
         if(audio.paused){
             audio.play().then(()=>{
                 btn.innerText = '⏸ Pause Music';
+                const mp = document.getElementById('mobile-play'); if(mp) mp.innerText = '⏸ Pause';
             }).catch(err=>{
                 console.warn('Audio play blocked:', err);
                 btn.innerText = '🎵 Play Music';
@@ -402,6 +498,7 @@ function setupMusicButton(){
         } else {
             audio.pause();
             btn.innerText = '🎵 Play Music';
+            const mp = document.getElementById('mobile-play'); if(mp) mp.innerText = '🎵 Play';
         }
     });
 }
