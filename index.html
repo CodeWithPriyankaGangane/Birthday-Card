@@ -240,17 +240,19 @@ button:hover{ background:#e91e63; transform:translateY(-3px); box-shadow:0 8px 2
 }
 
 @media (max-width: 600px){
-    body{ overflow:auto; }
-    #bg-canvas, #balloons, .confetti{ display:none !important; }
-    .book{ width:94%; max-width:420px; height:100vh; margin:8px auto; }
-    .page{ padding:18px; border-radius:14px; min-height:100%; }
+    /* Keep background visible and center a constrained card similar to desktop */
+    body{ overflow:hidden; }
+    #bg-canvas, #balloons{ display:block !important; }
+    .confetti{ display:none; }
+    .book{ width:92%; max-width:720px; height: min(560px, 78vh); margin:28px auto; }
+    .page{ padding:20px; border-radius:16px; min-height: min(480px, 72vh); }
     .page, .book{ min-height:0; }
-    .cover{ height:auto; padding:12px 0; }
-    img{ width: clamp(120px, 48vw, 320px); height:auto; display:block; margin:10px auto; }
-    h1{ font-size:1.4rem; }
+    .cover{ height:100%; padding:0 10px; }
+    img{ width: clamp(140px, 40vw, 320px); height:auto; display:block; margin:10px auto; }
+    h1{ font-size:clamp(1.4rem, 5.5vw, 2rem); }
     .quote{ font-size:16px; line-height:1.6; }
-    .heart{ font-size:48px; }
-    button{ width:86%; display:block; margin:10px auto; padding:14px; font-size:18px; }
+    .heart{ font-size:56px; }
+    button{ width:auto; display:inline-block; margin:12px; padding:12px 28px; font-size:18px; }
 }
 
 @media (max-width: 380px){
